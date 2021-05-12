@@ -27,6 +27,5 @@ while True:
     except IOError as error:
         print(f'Error: {error}')
     
-    
     for k, v in sorted(data.items()):
         print(f'{v.ip_address} - {v.hour}h - {v.temperature}°C - {v.humidity}%')
