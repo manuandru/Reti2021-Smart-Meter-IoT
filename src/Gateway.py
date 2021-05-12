@@ -56,16 +56,16 @@ while True:
             print('Trying again...')
             time.sleep(2)
             continue
-        
-        clients_bytes = pickle.dumps(clients)
+
         t0 = time.time_ns()
+        clients_bytes = pickle.dumps((clients, t0))
         tcp_socket.send(clients_bytes)
         t = time.time_ns()
         tcp_socket.close()
         sent = True
         dt = t - t0
     
-    print(f'Data is correctly sent to the server in {dt/10e6}\n')
+    print(f'Data is correctly sent to the server in {dt}\n')
     time.sleep(2)
 
     

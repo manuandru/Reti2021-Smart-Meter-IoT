@@ -6,6 +6,7 @@
 import socket
 import pickle
 import sensor_version.config as config
+import time
 
 tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = (config.server_TCP_ip, config.server_TCP_port)
@@ -21,11 +22,15 @@ while True:
 
     try:
         data_bytes = connectionSocket.recv(1024)
-        data = pickle.loads(data_bytes)
+        (data, t0) = pickle.loads(data_bytes)
         connectionSocket.close()
+        t = time.time_ns()
+        dt = t - t0
 
     except IOError as error:
         print(f'Error: {error}')
     
     for k, v in sorted(data.items()):
         print(f'{v.ip_address} - {v.hour}h - {v.temperature}°C - {v.humidity}%')
+    
+    print(f'Socket time: {dt} ns\n')

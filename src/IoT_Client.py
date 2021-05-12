@@ -43,7 +43,7 @@ while True:
             
             t = time.time_ns()
             dt = t - t0
-            print('Socket time:', dt/10e6, 'ms')
+            print('Socket time:', dt, 'ns')
             print('Waiting for response...')
 
             udp_socket.settimeout(udp_timeout)
