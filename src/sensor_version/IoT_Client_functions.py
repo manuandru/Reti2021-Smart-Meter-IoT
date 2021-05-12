@@ -5,17 +5,19 @@
 import time
 import ntptime
 import machine
+import dht
 
 GTM = 3600
+sensor = dht.DHT11(machine.Pin(4))
 
-reading_waiting_time = 0
 
 def read_data_from_sensor():
-    hour = '10:00' # Hour
-    temperature = '18.00' # Temperature
-    humidity = '75.00' # Humidity
-    time.sleep(reading_waiting_time)
-    return (hour, temperature, humidity)
+    sensor.measure()
+    (year, month, mday, hour, minute, second, weekday, yearday) = time.localtime()
+    datetime = str(hour) + ':' + str(minute)
+    temperature = sensor.temperature() # Temperature
+    humidity = sensor.humidity() # Humidity
+    return (datetime, temperature, humidity)
 
 def set_time(timezone):
     ntptime.settime()

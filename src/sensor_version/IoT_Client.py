@@ -18,18 +18,18 @@ client_number = 1   # number for identifing clients
 
 sta_if = network.WLAN(network.STA_IF)
 if not sta_if.isconnected():
-    print('connecting to network...')
-    sta_if.active(True)
-    sta_if.ifconfig((config.client_UDP_ip, config.client_UDP_subnet, config.network_client_ip, config.DNS_ip))
-    sta_if.connect(config.wifi_ssid, config.wifi_password)
     while not sta_if.isconnected():
-        pass
+        print('connecting to network...')
+        try:
+            sta_if.active(True)
+            sta_if.ifconfig((config.client_UDP_ip, config.client_UDP_subnet, config.network_client_ip, config.DNS_ip))
+            sta_if.connect(config.wifi_ssid, config.wifi_password)
+        except Exception as error:
+            print(error)
+        time.sleep(1)
 print('network config:', sta_if.ifconfig())
 
 IoT_Client_functions.set_time(2) # my function to adjust time accorting to NTP and timezone
-
-print(time.time())
-
 
 server_address = (config.gateway_UDP_ip, config.gateway_UDP_port)
 
@@ -38,6 +38,7 @@ while True:
     print('Reading data from sensor...')
     hour, temperature, humidity = IoT_Client_functions.read_data_from_sensor()
     data = message(client_number, hour, temperature, humidity)
+    print('Hour:', hour, 'temperature:', temperature, 'humidity:', humidity)
     
     
     OK = False
@@ -48,8 +49,11 @@ while True:
             print('Sending data to ' + server_address[0] + '...')
             data.sending_time(time.time_ns())
             data_bytes = json.dumps(data.__dict__)
+            t0 = time.time_ns()
             udp_socket.sendto(data_bytes.encode('utf8'), server_address)
-            
+            t = time.time_ns()
+            dt = t - t0
+            print('Socket time:', dt/10e6, 'ms')
             print('Waiting for response...')
             udp_socket.settimeout(udp_timeout)
 

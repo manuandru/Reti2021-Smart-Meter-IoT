@@ -38,9 +38,14 @@ while True:
             print(f'Sending data to {server_address}...')
             data.sending_time(time.time_ns())
             data_bytes = json.dumps(data.__dict__)
+            t0 = time.time_ns()
             udp_socket.sendto(data_bytes.encode('utf8'), server_address)
             
+            t = time.time_ns()
+            dt = t - t0
+            print('Socket time:', dt/10e6, 'ms')
             print('Waiting for response...')
+
             udp_socket.settimeout(udp_timeout)
 
             
