@@ -5,8 +5,10 @@
 
 import socket
 import time
-import config
+import sensor_version.config as config
+import json
 import pickle
+from sensor_version.data_message import message
 
 udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -22,11 +24,12 @@ while True:
     while not ready:
         print('Waiting for data...')
         
-        data_bytes, address = udp_socket.recvfrom(1024)
+        data_bytes, address = udp_socket.recvfrom(4096)
         
-        data = pickle.loads(data_bytes)
+        data = json.loads(data_bytes.decode())
+        data = message(**data)
         data.arriving_time(time.time_ns()) # add arriving packet time
-        data.ip_address(address[0]) # add sender address information
+        data.set_ip_address(address[0]) # add sender address information
         
         # Store data if not already done
         if data.client not in clients:
@@ -36,7 +39,6 @@ while True:
         
         if data:
             udp_socket.sendto('OK'.encode('utf8'), address)
-            #print('Sending check message\n')
         
         if len(clients) == config.number_of_clients:
             ready = True
@@ -55,7 +57,7 @@ while True:
             time.sleep(2)
             continue
         
-        clients_bytes = pickle.dumps(clients, protocol=pickle.HIGHEST_PROTOCOL)
+        clients_bytes = pickle.dumps(clients)
         tcp_socket.send(clients_bytes)
         time.sleep(1)
         tcp_socket.close()
