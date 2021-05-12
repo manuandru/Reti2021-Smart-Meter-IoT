@@ -3,7 +3,7 @@
 @author: Manuel
 """
 
-gateway_UDP_ip = 'localhost' # 192.168.1.2/24
+gateway_UDP_ip = '192.168.1.10' # 192.168.1.2/24
 gateway_UDP_port = 10000
 
 number_of_clients = 4
