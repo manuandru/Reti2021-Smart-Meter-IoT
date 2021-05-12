@@ -5,7 +5,7 @@
 
 import socket
 import pickle
-import config
+import sensor_version.config as config
 
 tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = (config.server_TCP_ip, config.server_TCP_port)
