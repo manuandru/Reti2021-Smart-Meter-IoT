@@ -21,7 +21,7 @@ while True:
     connectionSocket, addr = tcp_socket.accept()
 
     try:
-        data_bytes = connectionSocket.recv(1024)
+        data_bytes = connectionSocket.recv(4096)
         (data, t0) = pickle.loads(data_bytes)
         connectionSocket.close()
         t = time.time_ns()
