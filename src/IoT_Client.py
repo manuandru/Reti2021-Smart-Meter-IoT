@@ -6,10 +6,10 @@
 import socket
 import time
 import sys
-import config
+import json
+import sensor_version.config as config
 from IoT_Client_functions import read_data_from_sensor
-import pickle
-from data_message import message
+from sensor_version.data_message import message
 
 udp_timeout = 2
 udp_delay = 1
@@ -37,8 +37,8 @@ while True:
             udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             print(f'Sending data to {server_address}...')
             data.sending_time(time.time_ns())
-            data_bytes = pickle.dumps(data)
-            udp_socket.sendto(data_bytes, server_address)
+            data_bytes = json.dumps(data.__dict__)
+            udp_socket.sendto(data_bytes.encode('utf8'), server_address)
             
             print('Waiting for response...')
             udp_socket.settimeout(udp_timeout)
