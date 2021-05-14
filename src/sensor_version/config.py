@@ -6,8 +6,8 @@
 number_of_clients = 4 # To way for transmit message to the Server
 
 # WI-FI setup
-wifi_ssid = 'Home&Life SuperWiFi-5D91'
-wifi_password = '7RR7UY3DG7XT8KMQ'
+wifi_ssid = 'ssid'
+wifi_password = 'password'
 
 # Client network information
 client_UDP_ip = '192.168.1.20'
