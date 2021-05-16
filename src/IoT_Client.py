@@ -19,6 +19,7 @@ if len(sys.argv) != 2:
     sys.exit(1)
 
 client_number = int(sys.argv[1])
+client_ip = config.arp_table[client_number]
 
 server_address = (config.gateway_UDP_ip, config.gateway_UDP_port)
 
@@ -28,6 +29,7 @@ while True:
     print('Reading data from sensor...')
     hour, temperature, humidity = read_data_from_sensor()
     data = message(client_number, hour, temperature, humidity)
+    data.set_ip_address(client_ip)
     
     
     OK = False

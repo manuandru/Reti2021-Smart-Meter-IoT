@@ -28,8 +28,12 @@ while True:
         
         data = json.loads(data_bytes.decode())
         data = message(**data)
+
+        # Drop packet not connected (Useful for simulation)
+        if data.ip_address not in config.arp_table.values():
+            continue
+        
         data.arriving_time(time.time_ns()) # add arriving packet time
-        data.set_ip_address(address[0]) # add sender address information
         
         # Store data if not already done
         if data.client not in clients:

@@ -15,6 +15,7 @@ import config
 udp_timeout = 2     # timeout time for waiting response from gateway
 udp_delay = 1       # delay between two connection to
 client_number = 1   # number for identifing clients
+client_ip = config.arp_table[client_number]
 
 sta_if = network.WLAN(network.STA_IF)
 if not sta_if.isconnected():
@@ -22,7 +23,7 @@ if not sta_if.isconnected():
         print('connecting to network...')
         try:
             sta_if.active(True)
-            sta_if.ifconfig((config.client_UDP_ip, config.client_UDP_subnet, config.network_client_ip, config.DNS_ip))
+            sta_if.ifconfig((client_ip, config.client_UDP_subnet, config.network_client_ip, config.DNS_ip))
             sta_if.connect(config.wifi_ssid, config.wifi_password)
         except Exception as error:
             print(error)
@@ -38,7 +39,8 @@ while True:
     print('Reading data from sensor...')
     hour, temperature, humidity = IoT_Client_functions.read_data_from_sensor()
     data = message(client_number, hour, temperature, humidity)
-    print('Hour:', hour, 'temperature:', temperature, 'humidity:', humidity)
+    data.set_ip_address(client_ip)
+    #print('Hour:', hour, 'temperature:', temperature, 'humidity:', humidity)
     
     
     OK = False
